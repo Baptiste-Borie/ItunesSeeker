@@ -7,6 +7,7 @@ import store from "./store/store";
 import SearchBarScreen from "./components/Screens/SearchBarScreen";
 import SingleSongScreen from "./components/Screens/SingleSongScreen";
 import PlaylistScreen from "./components/Screens/PlaylistScreen";
+import SingleAlbumScreen from "./components/Screens/SingleAlbumScreen";
 
 export default function App() {
   const Tab = createBottomTabNavigator();
@@ -42,6 +43,11 @@ export default function App() {
             name="SingleSongScreen"
             component={SingleSongScreen}
             options={{ title: "Détails de la chanson" }}
+          />
+          <Stack.Screen
+            name="SingleAlbumScreen"
+            component={SingleAlbumScreen}
+            options={{ title: "Détails de l'album" }}
           />
         </Stack.Navigator>
       </NavigationContainer>

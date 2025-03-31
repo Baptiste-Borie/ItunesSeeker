@@ -8,7 +8,7 @@ import Rating from "./shared/Rating";
 export default function SingleSongScreen({ route }) {
   const dispatch = useDispatch();
   const music = useSelector((state) => state.music);
-  const { song, origin } = route.params;
+  const { object: song, origin } = route.params;
 
   const isSongInStore = music.some(
     (storedSong) => storedSong.trackId === song.trackId
@@ -58,7 +58,7 @@ export default function SingleSongScreen({ route }) {
         onPress={() => console.log("b:musique")}
       />
 
-      {origin === "search" && (
+      {origin !== "playlist" && (
         <Button title="Ajouter à la playlist" onPress={addToPlaylist} />
       )}
 

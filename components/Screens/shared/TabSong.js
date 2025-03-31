@@ -15,6 +15,20 @@ export default function TabSong({ object, navigation, origin, filter }) {
     }
   };
 
+  const navigateToScreen = () => {
+    if (filter === "album") {
+      navigation.navigate("SingleAlbumScreen", {
+        object: object,
+        origin: origin,
+      });
+    } else {
+      navigation.navigate("SingleSongScreen", {
+        object: object,
+        origin: origin,
+      });
+    }
+  };
+
   return (
     <TouchableOpacity
       style={{
@@ -24,14 +38,9 @@ export default function TabSong({ object, navigation, origin, filter }) {
         borderBottomWidth: 1,
         borderColor: "#ccc",
       }}
-      onPress={() =>
-        navigation.navigate("SingleSongScreen", {
-          song: object,
-          origin: origin,
-        })
-      }
+      onPress={navigateToScreen}
     >
-      {(filter === "song" || filter === "album") && (
+      {filter !== "musicArtist" && (
         <Image
           source={{ uri: object.artworkUrl100 }}
           style={{
