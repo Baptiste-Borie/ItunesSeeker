@@ -1,32 +1,55 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 
 export default function SingleAlbumScreen({ route, navigation }) {
-  const { object: album } = route.params;
+  const { object: initialAlbum } = route.params;
+  const [album, setAlbum] = useState(initialAlbum);
   const [songs, setSongs] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (album && album.collectionId) {
-      fetchSongs(album.collectionId);
+    if (initialAlbum.collectionId) {
+      fetchAlbumDetails(initialAlbum.collectionId);
     }
-  }, [album]);
+  }, [initialAlbum]);
 
-  const fetchSongs = async (collectionId) => {
+  const fetchAlbumDetails = async (collectionId) => {
     try {
       const response = await fetch(
         `https://itunes.apple.com/lookup?id=${collectionId}&entity=song`
       );
       const data = await response.json();
-      setSongs(data.results.filter((item) => item.wrapperType === "track"));
+
+      if (data.results.length > 0) {
+        setAlbum(data.results[0]);
+        setSongs(data.results.slice(1));
+      }
     } catch (error) {
-      console.error("Erreur lors de la récupération des chansons :", error);
+      console.error("Erreur lors de la récupération de l'album :", error);
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   if (!album) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Aucune chanson trouvée</Text>
+        <Text>Aucun album trouvé</Text>
       </View>
     );
   }

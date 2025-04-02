@@ -5,7 +5,7 @@ import { addMusic, updateRating } from "../../store/MusicSlice";
 import { useState } from "react";
 import Rating from "./shared/Rating";
 
-export default function SingleSongScreen({ route }) {
+export default function SingleSongScreen({ route, navigation }) {
   const dispatch = useDispatch();
   const music = useSelector((state) => state.music);
   const { object: song, origin } = route.params;
@@ -56,6 +56,29 @@ export default function SingleSongScreen({ route }) {
       <Button
         title="Écouter un extrait"
         onPress={() => console.log("b:musique")}
+      />
+
+      <Button
+        title="Voir l'album"
+        onPress={() =>
+          song.collectionId &&
+          navigation.navigate("SingleAlbumScreen", {
+            object: {
+              collectionId: song.collectionId,
+              collectionName: song.collectionName,
+            },
+          })
+        }
+      />
+
+      <Button
+        title="Voir l'artiste"
+        onPress={() =>
+          song.artistId &&
+          navigation.navigate("SingleArtistScreen", {
+            object: { artistId: song.artistId, artistName: song.artistName },
+          })
+        }
       />
 
       {origin !== "playlist" && (

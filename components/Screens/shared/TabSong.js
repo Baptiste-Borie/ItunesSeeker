@@ -21,6 +21,11 @@ export default function TabSong({ object, navigation, origin, filter }) {
         object: object,
         origin: origin,
       });
+    } else if (filter === "musicArtist") {
+      navigation.navigate("SingleArtistScreen", {
+        object: object,
+        origin: origin,
+      });
     } else {
       navigation.navigate("SingleSongScreen", {
         object: object,
