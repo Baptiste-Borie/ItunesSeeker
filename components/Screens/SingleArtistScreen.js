@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 
 export default function SingleArtistScreen({ route, navigation }) {
   const { object: artist } = route.params;
@@ -28,7 +36,9 @@ export default function SingleArtistScreen({ route, navigation }) {
         dataAlbums.results.filter((item) => item.wrapperType === "collection")
       );
       setSongs(
-        dataSongs.results.filter((item) => item.wrapperType === "track")
+        dataSongs.results
+          .filter((item) => item.wrapperType === "track")
+          .slice(0, 6)
       );
     } catch (error) {
       console.error(
@@ -40,24 +50,21 @@ export default function SingleArtistScreen({ route, navigation }) {
 
   if (!artist) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Aucun artiste trouvé</Text>
+      <View style={styles.center}>
+        <Text style={styles.emptyText}>Aucun artiste trouvé</Text>
       </View>
     );
   }
 
   return (
-    <View style={{ flex: 1, alignItems: "center", padding: 20 }}>
-      <Text style={{ fontSize: 24, fontWeight: "bold" }}>
-        {artist.artistName}
-      </Text>
+    <ScrollView style={styles.container}>
+      <Text style={styles.artistName}>{artist.artistName}</Text>
 
-      <Text style={{ fontSize: 20, marginTop: 20, fontWeight: "bold" }}>
-        Meilleurs Titres
-      </Text>
+      <Text style={styles.sectionTitle}>🎵 Meilleurs Titres</Text>
       <FlatList
         data={songs}
         keyExtractor={(item) => item.trackId.toString()}
+        scrollEnabled={false}
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() =>
@@ -66,52 +73,82 @@ export default function SingleArtistScreen({ route, navigation }) {
                 origin: "artist",
               })
             }
+            style={styles.row}
           >
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                padding: 10,
-                borderBottomWidth: 1,
-                borderColor: "#ccc",
-              }}
-            >
-              <Text style={{ fontSize: 16 }}>{item.trackName}</Text>
-            </View>
+            <Text style={styles.songText}>{item.trackName}</Text>
           </TouchableOpacity>
         )}
       />
 
-      <Text style={{ fontSize: 20, marginTop: 20, fontWeight: "bold" }}>
-        Meilleurs Albums
-      </Text>
+      <Text style={styles.sectionTitle}>📀 Meilleurs Albums</Text>
       <FlatList
         data={albums}
         keyExtractor={(item) => item.collectionId.toString()}
+        scrollEnabled={false}
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() =>
               navigation.navigate("SingleAlbumScreen", { object: item })
             }
+            style={styles.row}
           >
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                padding: 10,
-                borderBottomWidth: 1,
-                borderColor: "#ccc",
-              }}
-            >
-              <Image
-                source={{ uri: item.artworkUrl60 }}
-                style={{ width: 50, height: 50, marginRight: 10 }}
-              />
-              <Text style={{ fontSize: 16 }}>{item.collectionName}</Text>
-            </View>
+            <Image
+              source={{ uri: item.artworkUrl60 }}
+              style={styles.albumImage}
+            />
+            <Text style={styles.songText}>{item.collectionName}</Text>
           </TouchableOpacity>
         )}
       />
-    </View>
+    </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#0f172a",
+    padding: 20,
+  },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#0f172a",
+  },
+  emptyText: {
+    color: "#94a3b8",
+    fontSize: 18,
+  },
+  artistName: {
+    fontSize: 26,
+    fontWeight: "bold",
+    color: "#fff",
+    textAlign: "center",
+    marginBottom: 25,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#38bdf8",
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderColor: "#334155",
+  },
+  songText: {
+    fontSize: 16,
+    color: "#f1f5f9",
+  },
+  albumImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 8,
+    marginRight: 10,
+  },
+});

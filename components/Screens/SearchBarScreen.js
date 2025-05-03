@@ -5,6 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
   Text,
+  StyleSheet,
 } from "react-native";
 import TabSong from "./shared/TabSong";
 
@@ -39,56 +40,42 @@ export default function SearchBarScreen({ navigation }) {
     }
   };
 
-  const filterButtonStyle = (currentFilter) => {
-    return {
-      borderWidth: 1,
-      padding: 10,
-      marginRight: 10,
-      borderRadius: 5,
-      borderColor: filter === currentFilter ? "blue" : "#ccc",
-    };
-  };
+  const filterButtonStyle = (currentFilter) => [
+    styles.filterButton,
+    filter === currentFilter && styles.filterButtonActive,
+  ];
 
   return (
-    <View style={{ flex: 1, margin: 50, padding: 20 }}>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          paddingBottom: 10,
-        }}
-      >
+    <View style={styles.container}>
+      <Text style={styles.title}>ItunesSeeker 🎧</Text>
+
+      <View style={styles.filters}>
         <TouchableOpacity
           onPress={() => setFilterType("song")}
           style={filterButtonStyle("song")}
         >
-          <Text>Chanson</Text>
+          <Text style={styles.filterText}>Chanson</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           onPress={() => setFilterType("album")}
           style={filterButtonStyle("album")}
         >
-          <Text>Album</Text>
+          <Text style={styles.filterText}>Album</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           onPress={() => setFilterType("musicArtist")}
           style={filterButtonStyle("musicArtist")}
         >
-          <Text>Artiste</Text>
+          <Text style={styles.filterText}>Artiste</Text>
         </TouchableOpacity>
       </View>
 
       <TextInput
         placeholder="Cherchez une musique..."
-        style={{
-          borderWidth: 1,
-          borderColor: "#ccc",
-          padding: 10,
-          marginBottom: 10,
-          borderRadius: 5,
-        }}
+        placeholderTextColor="#aaa"
+        style={styles.input}
         value={searchTerm}
         onChangeText={(text) => setSearchTerm(text)}
         onSubmitEditing={() => searchMusic(searchTerm)}
@@ -111,3 +98,48 @@ export default function SearchBarScreen({ navigation }) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#0f172a", // bleu foncé
+    padding: 20,
+  },
+  title: {
+    fontSize: 26,
+    fontWeight: "bold",
+    color: "#fff",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  filters: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 15,
+  },
+  filterButton: {
+    borderWidth: 1,
+    borderColor: "#334155",
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    backgroundColor: "#1e293b",
+  },
+  filterButtonActive: {
+    borderColor: "#3b82f6",
+    backgroundColor: "#2563eb",
+  },
+  filterText: {
+    color: "#fff",
+    fontWeight: "500",
+  },
+  input: {
+    backgroundColor: "#1e293b",
+    borderRadius: 10,
+    padding: 12,
+    color: "#fff",
+    borderColor: "#334155",
+    borderWidth: 1,
+    marginBottom: 20,
+  },
+});

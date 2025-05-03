@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
+  StyleSheet,
 } from "react-native";
 
 export default function SingleAlbumScreen({ route, navigation }) {
@@ -40,40 +41,30 @@ export default function SingleAlbumScreen({ route, navigation }) {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="#0000ff" />
+      <View style={styles.center}>
+        <ActivityIndicator size="large" color="#3b82f6" />
       </View>
     );
   }
 
   if (!album) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Aucun album trouvé</Text>
+      <View style={styles.center}>
+        <Text style={styles.emptyText}>Aucun album trouvé</Text>
       </View>
     );
   }
 
   return (
-    <View style={{ flex: 1, alignItems: "center", padding: 20 }}>
-      <Image
-        source={{ uri: album.artworkUrl100 }}
-        style={{
-          width: 250,
-          height: 250,
-          borderRadius: 5,
-          marginBottom: 20,
-        }}
-      />
-
-      <Text style={{ fontSize: 24, fontWeight: "bold" }}>
-        {album.collectionName}
-      </Text>
-      <Text style={{ fontSize: 18, color: "gray" }}>{album.artistName}</Text>
+    <View style={styles.container}>
+      <Image source={{ uri: album.artworkUrl100 }} style={styles.image} />
+      <Text style={styles.albumName}>{album.collectionName}</Text>
+      <Text style={styles.artistName}>{album.artistName}</Text>
 
       <FlatList
         data={songs}
         keyExtractor={(item) => item.trackId.toString()}
+        contentContainerStyle={{ paddingBottom: 20 }}
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() =>
@@ -82,23 +73,60 @@ export default function SingleAlbumScreen({ route, navigation }) {
                 origin: "album",
               })
             }
+            style={styles.songRow}
           >
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                padding: 10,
-                borderBottomWidth: 1,
-                borderColor: "#ccc",
-              }}
-            >
-              <Text style={{ fontSize: 16 }}>
-                {item.trackName} - {item.artistName}
-              </Text>
-            </View>
+            <Text style={styles.songText}>
+              {item.trackName} - {item.artistName}
+            </Text>
           </TouchableOpacity>
         )}
       />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#0f172a",
+    padding: 20,
+  },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#0f172a",
+  },
+  emptyText: {
+    color: "#94a3b8",
+    fontSize: 18,
+  },
+  image: {
+    width: 200,
+    height: 200,
+    borderRadius: 12,
+    alignSelf: "center",
+    marginBottom: 20,
+  },
+  albumName: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#fff",
+    textAlign: "center",
+  },
+  artistName: {
+    fontSize: 16,
+    color: "#94a3b8",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  songRow: {
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderColor: "#334155",
+  },
+  songText: {
+    fontSize: 16,
+    color: "#f1f5f9",
+  },
+});

@@ -1,8 +1,14 @@
-import React from "react";
-import { View, Text, Image, Button, Alert } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  Image,
+  Alert,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { addMusic, updateRating } from "../../store/MusicSlice";
-import { useState } from "react";
 import Rating from "./shared/Rating";
 
 export default function SingleSongScreen({ route, navigation }) {
@@ -38,28 +44,28 @@ export default function SingleSongScreen({ route, navigation }) {
 
   if (!song) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Aucune chanson trouvée</Text>
+      <View style={styles.center}>
+        <Text style={styles.text}>Aucune chanson trouvée</Text>
       </View>
     );
   }
 
   return (
-    <View style={{ flex: 1, alignItems: "center", padding: 50 }}>
-      <Image
-        source={{ uri: song.artworkUrl100 }}
-        style={{ width: 150, height: 150, marginBottom: 20 }}
-      />
-      <Text style={{ fontSize: 20, fontWeight: "bold" }}>{song.trackName}</Text>
-      <Text style={{ fontSize: 16, color: "gray" }}>{song.artistName}</Text>
+    <View style={styles.container}>
+      <Image source={{ uri: song.artworkUrl100 }} style={styles.image} />
 
-      <Button
-        title="Écouter un extrait"
+      <Text style={styles.trackName}>{song.trackName}</Text>
+      <Text style={styles.artistName}>{song.artistName}</Text>
+
+      <TouchableOpacity
+        style={styles.button}
         onPress={() => console.log("b:musique")}
-      />
+      >
+        <Text style={styles.buttonText}>🎧 Écouter un extrait</Text>
+      </TouchableOpacity>
 
-      <Button
-        title="Voir l'album"
+      <TouchableOpacity
+        style={styles.button}
         onPress={() =>
           song.collectionId &&
           navigation.navigate("SingleAlbumScreen", {
@@ -69,28 +75,91 @@ export default function SingleSongScreen({ route, navigation }) {
             },
           })
         }
-      />
+      >
+        <Text style={styles.buttonText}>📀 Voir l'album</Text>
+      </TouchableOpacity>
 
-      <Button
-        title="Voir l'artiste"
+      <TouchableOpacity
+        style={styles.button}
         onPress={() =>
           song.artistId &&
           navigation.navigate("SingleArtistScreen", {
-            object: { artistId: song.artistId, artistName: song.artistName },
+            object: {
+              artistId: song.artistId,
+              artistName: song.artistName,
+            },
           })
         }
-      />
+      >
+        <Text style={styles.buttonText}>👤 Voir l'artiste</Text>
+      </TouchableOpacity>
 
       {origin !== "playlist" && (
-        <Button title="Ajouter à la playlist" onPress={addToPlaylist} />
+        <TouchableOpacity style={styles.button} onPress={addToPlaylist}>
+          <Text style={styles.buttonText}>➕ Ajouter à la playlist</Text>
+        </TouchableOpacity>
       )}
 
       {origin === "playlist" && (
-        <View style={{ marginTop: 20 }}>
-          <Text style={{ fontSize: 18 }}>Évaluez cette chanson :</Text>
+        <View style={{ marginTop: 30 }}>
+          <Text style={[styles.text, { marginBottom: 10 }]}>
+            ⭐ Évaluez cette chanson :
+          </Text>
           <Rating currentRating={rating} onRate={rateSong} />
         </View>
       )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#0f172a",
+    alignItems: "center",
+    padding: 30,
+  },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#0f172a",
+  },
+  image: {
+    width: 180,
+    height: 180,
+    borderRadius: 12,
+    marginBottom: 25,
+  },
+  trackName: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#fff",
+    textAlign: "center",
+    marginBottom: 4,
+  },
+  artistName: {
+    fontSize: 16,
+    color: "#94a3b8",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  button: {
+    backgroundColor: "#1e40af",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    marginTop: 10,
+    width: "100%",
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "600",
+    textAlign: "center",
+    fontSize: 16,
+  },
+  text: {
+    color: "#fff",
+    fontSize: 16,
+  },
+});

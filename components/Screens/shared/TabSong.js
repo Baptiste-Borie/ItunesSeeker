@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, Image, TouchableOpacity } from "react-native";
+import { Text, Image, TouchableOpacity, View, StyleSheet } from "react-native";
 
 export default function TabSong({ object, navigation, origin, filter }) {
   const renderText = () => {
@@ -17,54 +17,52 @@ export default function TabSong({ object, navigation, origin, filter }) {
 
   const navigateToScreen = () => {
     if (filter === "album") {
-      navigation.navigate("SingleAlbumScreen", {
-        object: object,
-        origin: origin,
-      });
+      navigation.navigate("SingleAlbumScreen", { object, origin });
     } else if (filter === "musicArtist") {
-      navigation.navigate("SingleArtistScreen", {
-        object: object,
-        origin: origin,
-      });
+      navigation.navigate("SingleArtistScreen", { object, origin });
     } else {
-      navigation.navigate("SingleSongScreen", {
-        object: object,
-        origin: origin,
-      });
+      navigation.navigate("SingleSongScreen", { object, origin });
     }
   };
 
   return (
-    <TouchableOpacity
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        padding: 10,
-        borderBottomWidth: 1,
-        borderColor: "#ccc",
-      }}
-      onPress={navigateToScreen}
-    >
+    <TouchableOpacity style={styles.container} onPress={navigateToScreen}>
       {filter !== "musicArtist" && (
-        <Image
-          source={{ uri: object.artworkUrl100 }}
-          style={{
-            width: 50,
-            height: 50,
-            marginRight: 10,
-            borderRadius: 5,
-          }}
-        />
+        <Image source={{ uri: object.artworkUrl100 }} style={styles.image} />
       )}
 
-      <Text
-        style={{
-          fontSize: 16,
-          marginLeft: filter === "musicArtist" ? 0 : 10,
-        }}
-      >
-        {renderText()}
-      </Text>
+      <View style={styles.textContainer}>
+        <Text numberOfLines={2} style={styles.text}>
+          {renderText()}
+        </Text>
+      </View>
     </TouchableOpacity>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    padding: 12,
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: "#334155",
+    backgroundColor: "#1e293b",
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  image: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+    marginRight: 12,
+  },
+  textContainer: {
+    flexShrink: 1,
+  },
+  text: {
+    fontSize: 16,
+    color: "#f1f5f9",
+    fontWeight: "500",
+  },
+});
