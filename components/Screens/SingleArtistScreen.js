@@ -14,12 +14,14 @@ export default function SingleArtistScreen({ route, navigation }) {
   const [songs, setSongs] = useState([]);
   const [albums, setAlbums] = useState([]);
 
+  // Effect to fetch artist data when the component mounts or when the artist changes
   useEffect(() => {
     if (artist && artist.artistId) {
       fetchArtistData(artist.artistId);
     }
   }, [artist]);
 
+  // Function to fetch artist data from the iTunes API
   const fetchArtistData = async (artistId) => {
     try {
       const responseAlbums = await fetch(
@@ -48,6 +50,7 @@ export default function SingleArtistScreen({ route, navigation }) {
     }
   };
 
+  // Function to handle song selection
   if (!artist) {
     return (
       <View style={styles.center}>

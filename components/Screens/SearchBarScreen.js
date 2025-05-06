@@ -14,6 +14,7 @@ export default function SearchBarScreen({ navigation }) {
   const [songs, setSongs] = useState([]);
   const [filter, setFilter] = useState("song");
 
+  // Effect to fetch music when the component mounts or when the search term changes
   useEffect(() => {
     if (searchTerm.trim()) {
       searchMusic(searchTerm);
@@ -24,6 +25,7 @@ export default function SearchBarScreen({ navigation }) {
     setFilter(type);
   };
 
+  // Function to fetch music from the iTunes API
   const searchMusic = async (term) => {
     if (!term.trim()) return;
 

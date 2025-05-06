@@ -25,6 +25,7 @@ export default function SingleSongScreen({ route, navigation }) {
   );
   const [rating, setRating] = useState(existingSong ? existingSong.rating : 0);
 
+  // Function to add the song to the playlist
   const addToPlaylist = () => {
     if (isSongInStore) {
       Alert.alert(
@@ -37,11 +38,13 @@ export default function SingleSongScreen({ route, navigation }) {
     }
   };
 
+  // Function to handle song rating uses Redux to update the rating
   const rateSong = (newRating) => {
     setRating(newRating);
     dispatch(updateRating({ trackId: song.trackId, rating: newRating }));
   };
 
+  // Function to handle song selection
   if (!song) {
     return (
       <View style={styles.center}>

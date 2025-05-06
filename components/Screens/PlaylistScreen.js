@@ -7,6 +7,7 @@ import TabSong from "./shared/TabSong";
 export default function PlaylistScreen({ navigation }) {
   const music = useSelector(musicSelector);
 
+  // Check if the music array is empty
   if (music.length === 0) {
     return (
       <View style={styles.emptyContainer}>

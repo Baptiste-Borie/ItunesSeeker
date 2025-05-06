@@ -15,12 +15,14 @@ export default function SingleAlbumScreen({ route, navigation }) {
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Effect to fetch album details when the component mounts or when the initial album changes
   useEffect(() => {
     if (initialAlbum.collectionId) {
       fetchAlbumDetails(initialAlbum.collectionId);
     }
   }, [initialAlbum]);
 
+  // Function to fetch album details from the iTunes API
   const fetchAlbumDetails = async (collectionId) => {
     try {
       const response = await fetch(
@@ -39,6 +41,7 @@ export default function SingleAlbumScreen({ route, navigation }) {
     }
   };
 
+  // Function to handle song selection
   if (loading) {
     return (
       <View style={styles.center}>
@@ -47,6 +50,7 @@ export default function SingleAlbumScreen({ route, navigation }) {
     );
   }
 
+  // Check if the album is empty
   if (!album) {
     return (
       <View style={styles.center}>
